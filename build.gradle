@@ -1,5 +1,5 @@
 apply plugin: 'idea'
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'groovy'
 apply plugin: "maven-publish"
 apply plugin: 'eclipse'
@@ -10,6 +10,10 @@ group = 'com.decidir.api'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+
+java {
+	withSourcesJar()
+}
 
 jar {
     manifest {
@@ -29,8 +33,8 @@ task releaseJar(type: Jar) {
         attributes 'Implementation-Title': 'Java SDK for Decidir', 'Implementation-Version': version
     }
     archiveName 'decidir-v'+ version +'-java7.jar'
-    destinationDir project.file('dist')		
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    //destinationDir project.file('dist')		
+    //from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
@@ -53,9 +57,10 @@ dependencies {
 publishing {
     publications {
         mavenJar(MavenPublication) {
-           artifact releaseJar
-           artifactId 'decidir2-sdk-java7'
-           version project.version
+			from components.java
+       //	artifact releaseJar
+			artifactId 'decidir2-sdk-java7'
+			version project.version
         }
     }
 }
